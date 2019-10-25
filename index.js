@@ -22,7 +22,7 @@ async function Incant(options = {}) {
         const calledFrom = callsites()[1].getFileName();
 
         const {
-            name = 'targets',
+            name = 'incant',
             argv = process.argv.slice(2),
             targets:givenTargets = {},
             source:givenSource,
