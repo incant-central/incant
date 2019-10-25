@@ -1,12 +1,55 @@
 {
   "name": "incant",
   "version": "0.0.0",
-  "description": "incantations for the command-line",
+  "description": "magical incantations for the command-line",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "bin": {
+    "incant": "./index.js",
+    "i": "./index.js"
   },
-  "keywords": [],
-  "author": "Mac Heller-Ogden",
-  "license": "Apache-2.0"
+  "scripts": {
+    "test": "ava test/*.spec.js",
+    "watch": "npm run test -- --watch"
+  },
+  "homepage": "https://incant.gitbook.io/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/machellerogden/incant.git"
+  },
+  "author": {
+    "name": "Mac Heller-Ogden",
+    "email": "mac@machellerogden.com"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@hapi/joi": "15.1.0",
+    "answers": "4.0.5",
+    "callsites": "3.1.0",
+    "chalk": "^2.4.2",
+    "edn-to-js": "0.0.4",
+    "globby": "10.0.1",
+    "inquirer": "6.5.1",
+    "js-yaml": "3.13.1",
+    "log-symbols": "^3.0.0",
+    "pdn": "^0.3.7",
+    "requireg": "^0.2.2",
+    "resolve-global": "^1.0.0",
+    "shellspec": "1.0.5",
+    "sota": "0.2.14",
+    "stream-to-promise": "2.2.0",
+    "sugarmerge": "0.2.5",
+    "trajectory": "0.0.14"
+  },
+  "devDependencies": {
+    "ava": "2.2.0",
+    "sinon": "7.3.2",
+    "pre-commit": "1.2.2"
+  },
+  "pre-commit": [
+    "test"
+  ],
+  "engines": {
+    "node": ">=10.6.0",
+    "npm": ">=5.0.0"
+  }
 }
