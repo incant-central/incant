@@ -58,13 +58,20 @@ async function Incant(options = {}) {
         if (dry_run) process.exit(0);
         const t = new Trajectory({
             reporterOptions: {
-                printLabels: debug,
+                printLabels: {
+                    succeed: true,
+                    start: true,
+                    info: debug,
+                    fail: true,
+                    error: true,
+                    complete: debug
+                },
                 printEvents: {
                     succeed: true,
                     start: debug,
-                    info: debug,
+                    info: true,
                     fail: true,
-                    error: debug,
+                    error: true,
                     complete: debug
                 }
             },
