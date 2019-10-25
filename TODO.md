@@ -15,3 +15,4 @@
 - [ ] allow shellspec to support "other" choice override
 - [ ] new logo! re-brand opportunity
 - [ ] AWS Lambda invokations
+- [ ] shellspec man command
