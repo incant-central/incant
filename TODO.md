@@ -17,3 +17,4 @@
 - [ ] AWS Lambda invokations
 - [ ] shellspec man command
 - [ ] custom npm scope support - may impact pdn tag notation or at least sota's shorthand usage of @@
+- [ ] contribute.md
