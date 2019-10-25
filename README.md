@@ -1,4 +1,4 @@
-# [![Incant](incant-logo.png?raw=true "Incant")](https://incant.gitbook.io)
+# [![Incant](assets/incant-logo-small.png?raw=true "Incant")](https://incant.gitbook.io)
 
 > magical incantations for the command-line
 
