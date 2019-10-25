@@ -3,7 +3,7 @@
 - [x] sota based workflow orchestration
 - [x] pdn support for target data loader
 - [x] dry run support
-- [ ] strengthen streaming output support - some commands are running silently!
+- [x] strengthen streaming output support - some commands are running silently!
 - [ ] refine reported and output modes
 - [ ] recursive submachine support - non-trivial but doable
 - [ ] many many more unit tests
