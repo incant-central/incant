@@ -37,7 +37,7 @@
     "sota": "0.2.14",
     "stream-to-promise": "2.2.0",
     "sugarmerge": "0.2.5",
-    "trajectory": "0.0.17"
+    "trajectory": "0.0.18"
   },
   "devDependencies": {
     "ava": "2.2.0",
