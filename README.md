@@ -2,7 +2,7 @@
 
 > magical incantations for the command-line
 
-[![Version](https://img.shields.io/npm/v/incant.svg)]() [![Travis](https://img.shields.io/travis/machellerogden/incant.svg)]() [![License](https://img.shields.io/npm/l/incant.svg)]()
+[![Version](https://img.shields.io/npm/v/incant.svg)]() [![Travis](https://img.shields.io/travis/incant-central/incant.svg)]() [![License](https://img.shields.io/npm/l/incant.svg)]()
 
 ## Overview
 
