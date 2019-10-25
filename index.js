@@ -14,7 +14,6 @@ const log = (l, v) => (debug || dry_run) && console.log(`${dry_run ? JSON.string
 
 const { load, sourceExpander } = require('./lib/load');
 const { stateSchema, optionsSchema } = require('./lib/schema');
-const streamToPromise = require('stream-to-promise');
 const { prefixOptions } = require('./lib/util');
 const { resolveTarget, loadResource, Resolver } = require('./lib/resolve');
 
