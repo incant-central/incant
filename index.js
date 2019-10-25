@@ -57,7 +57,21 @@ async function Incant(options = {}) {
         const machine = await readAll(definition, { resolver: Resolver(targets) });
         log('machine definition:', machine);
         if (dry_run) process.exit(0);
-        const t = new Trajectory({ reporterOptions: { finalPrint: debug }, resources, debug });
+        const t = new Trajectory({
+            reporterOptions: {
+                printLabels: debug,
+                printEvents: {
+                    succeed: true,
+                    start: debug,
+                    info: debug,
+                    fail: true,
+                    error: debug,
+                    complete: debug
+                }
+            },
+            resources,
+            debug
+        });
 
         const input = config.input;
         return t.execute(machine, input);
