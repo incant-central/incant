@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 const Answers = require('Answers');
-const { load, sourceExpander } = require('./lib/load');
-const { stateSchema } = require('./lib/schema');
+const { load, sourceExpander } = require('../lib/load');
+const { stateSchema } = require('../lib/schema');
 const path = require('path');
 const callsites = require('callsites');
-const { resolveTarget } = require('./lib/resolve');
+const { resolveTarget } = require('../lib/resolve');
 const ShellSpec = require('shellspec');
 const { inspect } = require('util');
 
