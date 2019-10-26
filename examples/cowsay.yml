@@ -1,0 +1,7 @@
+kind: shell
+version: 1.0.0
+spec:
+    main: cowsay
+    args:
+    - name: thoughts
+      type: value

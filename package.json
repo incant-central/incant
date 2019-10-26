@@ -43,8 +43,9 @@
   },
   "devDependencies": {
     "ava": "2.2.0",
+    "pre-commit": "1.2.2",
     "sinon": "7.3.2",
-    "pre-commit": "1.2.2"
+    "weather-js": "^2.0.0"
   },
   "pre-commit": [
     "test"

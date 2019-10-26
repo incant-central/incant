@@ -60,19 +60,21 @@ async function Incant(options = {}) {
             reporterOptions: {
                 cols: 0,
                 printLabels: {
-                    succeed: true,
+                    succeed: debug,
                     start: true,
                     info: debug,
                     fail: true,
                     error: true,
+                    final: debug,
                     complete: debug
                 },
                 printEvents: {
-                    succeed: true,
+                    succeed: false,
                     start: debug,
-                    info: true,
+                    info: false,
                     fail: true,
                     error: true,
+                    final: true,
                     complete: debug
                 }
             },
