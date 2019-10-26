@@ -6,8 +6,8 @@
   "bin": {
     "incant": "./index.js",
     "i": "./index.js",
-    "incant-study": "./bin/study.js",
-    "i-study": "./bin/study.js"
+    "study": "./bin/study.js",
+    "s": "./bin/study.js"
   },
   "scripts": {
     "test": "ava test/*.spec.js",
