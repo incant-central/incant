@@ -4,8 +4,4 @@
 
 Let's jump right in. Open up a terminal and complete the steps below.
 
-```
-mkdir ./incant-demo
-cd ./incant-demo
-i git.init @[{filename README.md} touch] @[{message initial-commit} git.commit]
-```
+__Coming soon...__
