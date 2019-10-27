@@ -1,0 +1,4 @@
+npm.version
+git.push
+@^[{push {tags true}} git.push]
+@[{publish {access public}} npm.publish]
