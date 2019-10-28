@@ -6,7 +6,6 @@ const { Trajectory } = require('trajectory');
 const DefaultAnswers = require('answers');
 const callsites = require('callsites');
 const builtinLoaders = require('./lib/loaders');
-global.AWS = require('aws-sdk');
 
 const { inspect } = require('util');
 const debug = !!process.env.DEBUG;
