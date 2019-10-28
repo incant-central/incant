@@ -1,18 +1,18 @@
 'use strict';
 
-const AWS = require('aws-sdk');
-
 function lambdaExample({
     fn = 'mho-hello-world',
-    payload = {}
+    payload = {},
+    region = 'us-east-1',
+    type = 'RequestResponse'
 }) {
-    const lambda = new AWS.Lambda({
+    const lambda = new global.AWS.Lambda({
         apiVersion: '2015-03-31',
-        region: 'us-east-1'
+        region
     });
     return new Promise((resolve, reject) => lambda.invoke({
         FunctionName: fn,
-        InvocationType: 'RequestResponse',
+        InvocationType: type,
         Payload: JSON.stringify(payload)
     }, (err, data) => err ? reject(err) : resolve(JSON.parse(data.Payload).body)));
 }
