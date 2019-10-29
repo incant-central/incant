@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const { readAll }  = require('sota');
+const sota  = require('sota');
 const { Trajectory } = require('trajectory');
 const DefaultAnswers = require('answers');
 const callsites = require('callsites');
 const builtinLoaders = require('./lib/loaders');
 const { debug, dry_run, log } = require('./lib/debug');
 const { load, sourceExpander } = require('./lib/load');
-const { stateSchema, optionsSchema } = require('./lib/schema');
+const { optionsSchema, stateSchema  } = require('./lib/schema');
 const { prefixOptions } = require('./lib/util');
 const { resolveTarget, loadResource, Resolver } = require('./lib/resolve');
+const { handleError } = require('./lib/error');
 
 async function Incant(options = {}) {
     try {
@@ -21,37 +22,46 @@ async function Incant(options = {}) {
             argv = process.argv.slice(2),
             targets:givenTargets = {},
             source:givenSource,
-            loaders:customLoaders,
+            loaders:givenLoaders,
             __Answers__:Answers = DefaultAnswers
         } = await optionsSchema.validate(options);
 
         process.title = name;
 
-        const prefixedArgv = prefixOptions(argv);
-        const rawConfig = await Answers({
+        const loaders = { ...builtinLoaders, ...givenLoaders };
+
+        /**
+         * Answers - load argv and config
+         */
+        const config = await stateSchema.validate(await Answers({
             name,
-            argv: prefixedArgv,
+            argv: prefixOptions(argv),
             loaders: [ sourceExpander ]
-        });
-        const config = await stateSchema.validate(rawConfig);
+        }));
+
+        /**
+         * Sota - compile state machine definition
+         */
         const source = [ ...givenSource, ...config.source ];
         const loadedTargets = await load({ patterns: source, cwd: path.dirname(calledFrom) });
-        const targets = source.length
-            ? { ...givenTargets, ...loadedTargets }
-            : givenTargets;
-        const loaders = { ...builtinLoaders, ...customLoaders };
+        const targets = { ...givenTargets, ...loadedTargets }
+        const machine = await sota.readAll(config._, { resolver: Resolver(targets) });
 
-        const definition = config._;
-        const resourceCache = new WeakMap();
-        const resources = new Proxy({}, {
+        log('state machine definition:', machine);
+        if (dry_run) process.exit(0);
+
+        /**
+         * Trajectory - execute state machine
+         */
+        const trajectoryResourceCache = new WeakMap();
+
+        const trajectoryResources = new Proxy({}, {
             get(_, name) {
-                return resourceCache[name] || loadResource(name, resolveTarget(targets, name), loaders);
+                return trajectoryResourceCache[name] || loadResource(name, resolveTarget(targets, name), loaders);
             }
         });
-        const machine = await readAll(definition, { resolver: Resolver(targets) });
-        log('machine definition:', machine);
-        if (dry_run) process.exit(0);
-        const t = new Trajectory({
+
+        const trajectoryOptions = {
             reporterOptions: {
                 cols: 0,
                 printLabels: {
@@ -73,22 +83,16 @@ async function Incant(options = {}) {
                     complete: debug
                 }
             },
-            resources,
+            resources: trajectoryResources,
             debug
-        });
+        };
 
-        const input = config.input;
-        return t.execute(machine, input);
+        const trajectory = new Trajectory(trajectoryOptions);
+
+        return trajectory.execute(machine, config.input);
 
     } catch (e) {
-        if (e.name === 'ValidationError') {
-            console.error(`Validation Errors:\n${e.details.map(d => `  • ${d.message}`).join('\n')}\n`);
-            console.error(e.annotate());
-        } else {
-            console.error(e && e.message ? e.message : e);
-            e && e.stack && console.error(e.stack);
-        }
-        process.exit(1);
+        handleError(e);
     }
 }
 
