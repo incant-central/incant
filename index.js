@@ -21,7 +21,7 @@ async function Incant(options = {}) {
             argv = process.argv.slice(2),
             targets:givenTargets = {},
             source:givenSource,
-            loaders,
+            loaders = {},
             __Answers__:Answers = DefaultAnswers
         } = await optionsSchema.validate(options);
 
