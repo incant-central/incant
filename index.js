@@ -39,7 +39,7 @@ async function Incant(options = {}) {
         /**
          * Sota - compile state machine definition
          */
-        const source = [ ...givenSource, ...config.source ];
+        const source = [ ...givenSource, ...config.source.flat(Infinity) ];
         const loadedTargets = await load({ patterns: source, cwd: path.dirname(calledFrom) });
         const targets = { ...givenTargets, ...loadedTargets }
         const machine = await sota.readAll(config._, { resolver: SubmachineResolver(targets) });
