@@ -25,7 +25,6 @@
   "dependencies": {
     "@hapi/joi": "15.1.0",
     "answers": "4.0.5",
-    "aws-sdk": "^2.556.0",
     "callsites": "3.1.0",
     "chalk": "^2.4.2",
     "edn-to-js": "0.0.4",
@@ -35,7 +34,6 @@
     "pdn": "^0.3.7",
     "requireg": "^0.2.2",
     "resolve-global": "^1.0.0",
-    "shellspec": "1.1.0",
     "sota": "0.2.15",
     "stream-to-promise": "2.2.0",
     "sugarmerge": "0.2.5",
