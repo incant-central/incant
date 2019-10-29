@@ -1,7 +1,7 @@
-kind: shell
-version: 1.0.0
+kind: shellspec
 spec:
-    main: cowsay
-    args:
-    - name: thoughts
-      type: value
+  main: cowsay
+  args:
+  - name: thoughts
+    type: value
+    default: moo
