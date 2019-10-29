@@ -5,12 +5,11 @@ const sota  = require('sota');
 const { Trajectory } = require('trajectory');
 const DefaultAnswers = require('answers');
 const callsites = require('callsites');
-const builtinLoaders = require('./lib/loaders');
 const { debug, dry_run, log } = require('./lib/debug');
 const { load, sourceExpander } = require('./lib/load');
 const { optionsSchema, stateSchema  } = require('./lib/schema');
 const { prefixOptions } = require('./lib/util');
-const { resolveTarget, loadResource, Resolver } = require('./lib/resolve');
+const { resolveTarget, loadResource, SubmachineResolver } = require('./lib/resolve');
 const { handleError } = require('./lib/error');
 
 async function Incant(options = {}) {
@@ -22,13 +21,11 @@ async function Incant(options = {}) {
             argv = process.argv.slice(2),
             targets:givenTargets = {},
             source:givenSource,
-            loaders:givenLoaders,
+            loaders,
             __Answers__:Answers = DefaultAnswers
         } = await optionsSchema.validate(options);
 
         process.title = name;
-
-        const loaders = { ...builtinLoaders, ...givenLoaders };
 
         /**
          * Answers - load argv and config
@@ -45,7 +42,7 @@ async function Incant(options = {}) {
         const source = [ ...givenSource, ...config.source ];
         const loadedTargets = await load({ patterns: source, cwd: path.dirname(calledFrom) });
         const targets = { ...givenTargets, ...loadedTargets }
-        const machine = await sota.readAll(config._, { resolver: Resolver(targets) });
+        const machine = await sota.readAll(config._, { resolver: SubmachineResolver(targets) });
 
         log('state machine definition:', machine);
         if (dry_run) process.exit(0);
@@ -96,6 +93,4 @@ async function Incant(options = {}) {
     }
 }
 
-if (require.main === module) {
-    Incant();
-}
+module.exports = { Incant };

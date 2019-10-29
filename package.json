@@ -4,10 +4,9 @@
   "description": "magical incantations for the command-line",
   "main": "index.js",
   "bin": {
-    "incant": "./index.js",
-    "i": "./index.js",
-    "study": "./bin/study.js",
-    "s": "./bin/study.js"
+    "incant": "./bin/incant",
+    "i": "./bin/incant",
+    "study": "./bin/study"
   },
   "scripts": {
     "test": "ava test/*.spec.js",
