@@ -61,17 +61,7 @@ async function Incant(options = {}) {
         const trajectoryOptions = {
             reporterOptions: {
                 cols: 0,
-                printLabels: {
-                    succeed: debug,
-                    start: true,
-                    info: debug,
-                    fail: true,
-                    error: true,
-                    final: debug,
-                    complete: debug,
-                    stdout: true,
-                    stderr: true
-                },
+                gutterWidth: 12,
                 printEvents: {
                     succeed: false,
                     start: debug,
