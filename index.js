@@ -68,7 +68,9 @@ async function Incant(options = {}) {
                     fail: true,
                     error: true,
                     final: debug,
-                    complete: debug
+                    complete: debug,
+                    stdout: true,
+                    stderr: true
                 },
                 printEvents: {
                     succeed: false,
@@ -77,7 +79,9 @@ async function Incant(options = {}) {
                     fail: true,
                     error: true,
                     final: true,
-                    complete: debug
+                    complete: debug,
+                    stdout: true,
+                    stderr: true
                 }
             },
             resources: trajectoryResources,
