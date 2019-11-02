@@ -36,7 +36,7 @@
     "resolve-global": "^1.0.0",
     "sota": "0.2.15",
     "sugarmerge": "0.2.5",
-    "trajectory": "0.2.0"
+    "trajectory": "0.3.0"
   },
   "devDependencies": {
     "ava": "2.2.0",
