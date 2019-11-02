@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const sota  = require('sota');
+const sota = require('sota');
 const { Trajectory } = require('trajectory');
 const DefaultAnswers = require('answers');
 const callsites = require('callsites');
@@ -12,6 +12,7 @@ const { optionsSchema, configSchema } = require('./lib/schema');
 const { prefixOptions } = require('./lib/util');
 const { resolveTarget, loadResource, SubmachineResolver } = require('./lib/resolve');
 const { handleError } = require('./lib/error');
+const { EOL } = require('os');
 
 async function Incant(options = {}) {
     try {
@@ -45,7 +46,10 @@ async function Incant(options = {}) {
         if (DRY_RUN) process.env[constants.DRY_RUN] = DRY_RUN;
 
         debug('config:', config);
-        if (config._.length === 0) return;
+        if (config._.length === 0) {
+            process.stdout.write(`nothing to do...${EOL}`);
+            return;
+        }
 
         /**
          * Sota - compile state machine definition
