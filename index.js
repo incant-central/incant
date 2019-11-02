@@ -42,6 +42,7 @@ async function Incant(options = {}) {
         const DRY_RUN = process.env[constants.DRY_RUN] || config['--'].includes('--dry-run') || (config.settings || {}).dry_run;
         const VERBOSE = process.env[constants.VERBOSE] || config['--'].includes('-v') || config['--'].includes('--verbose') || (config.settings || {}).verbose;
         const COMPACT = process.env[constants.COMPACT] || config['--'].includes('-c') || config['--'].includes('--compact') || (config.settings || {}).compact;
+        const FINAL = process.env[constants.FINAL] || config['--'].includes('-f') || config['--'].includes('--final') || (config.settings || {}).final;
         if (DEBUG) process.env[constants.DEBUG] = DEBUG;
         if (DRY_RUN) process.env[constants.DRY_RUN] = DRY_RUN;
 
@@ -76,18 +77,18 @@ async function Incant(options = {}) {
         const trajectoryOptions = {
             reporterOptions: {
                 cols: 0,
-                compact: COMPACT,
+                compact: FINAL || COMPACT,
                 gutterWidth: 12,
                 printEvents: {
-                    succeed: true,
-                    start: DEBUG,
-                    info: VERBOSE,
-                    fail: true,
-                    error: true,
-                    final: DEBUG,
-                    complete: DEBUG,
-                    stdout: true,
-                    stderr: true
+                    succeed: !FINAL,
+                    start: !FINAL || DEBUG,
+                    info: !FINAL || VERBOSE,
+                    fail: !FINAL || true,
+                    error: !FINAL || true,
+                    final: FINAL,
+                    complete: !FINAL || DEBUG,
+                    stdout: !FINAL || true,
+                    stderr: !FINAL || true
                 }
             },
             resources: trajectoryResources,
