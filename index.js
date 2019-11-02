@@ -5,9 +5,10 @@ const sota  = require('sota');
 const { Trajectory } = require('trajectory');
 const DefaultAnswers = require('answers');
 const callsites = require('callsites');
-const { debug, dry_run, log } = require('./lib/debug');
+const constants = require('./lib/constants');
+const { debug } = require('./lib/debug');
 const { load, sourceExpander } = require('./lib/load');
-const { optionsSchema, stateSchema  } = require('./lib/schema');
+const { optionsSchema, configSchema } = require('./lib/schema');
 const { prefixOptions } = require('./lib/util');
 const { resolveTarget, loadResource, SubmachineResolver } = require('./lib/resolve');
 const { handleError } = require('./lib/error');
@@ -30,11 +31,21 @@ async function Incant(options = {}) {
         /**
          * Answers - load argv and config
          */
-        const config = await stateSchema.validate(await Answers({
+        const config = await configSchema.validate(await Answers({
             name,
             argv: prefixOptions(argv),
             loaders: [ sourceExpander ]
         }));
+
+        const DEBUG = process.env[constants.DEBUG] || config['--'].includes('--debug') || (config.settings || {}).debug;
+        const DRY_RUN = process.env[constants.DRY_RUN] || config['--'].includes('--dry-run') || (config.settings || {}).dry_run;
+        const VERBOSE = process.env[constants.VERBOSE] || config['--'].includes('-v') || config['--'].includes('--verbose') || (config.settings || {}).verbose;
+        const COMPACT = process.env[constants.COMPACT] || config['--'].includes('-c') || config['--'].includes('--compact') || (config.settings || {}).compact;
+        if (DEBUG) process.env[constants.DEBUG] = DEBUG;
+        if (DRY_RUN) process.env[constants.DRY_RUN] = DRY_RUN;
+
+        debug('config:', config);
+        if (config._.length === 0) return;
 
         /**
          * Sota - compile state machine definition
@@ -44,8 +55,8 @@ async function Incant(options = {}) {
         const targets = { ...givenTargets, ...loadedTargets }
         const machine = await sota.readAll(config._, { resolver: SubmachineResolver(targets) });
 
-        log('state machine definition:', machine);
-        if (dry_run) process.exit(0);
+        debug('state machine definition:', machine);
+        if (DRY_RUN) process.exit(0);
 
         /**
          * Trajectory - execute state machine
@@ -61,21 +72,22 @@ async function Incant(options = {}) {
         const trajectoryOptions = {
             reporterOptions: {
                 cols: 0,
+                compact: COMPACT,
                 gutterWidth: 12,
                 printEvents: {
                     succeed: false,
-                    start: debug,
-                    info: false,
+                    start: DEBUG,
+                    info: VERBOSE,
                     fail: true,
                     error: true,
                     final: true,
-                    complete: debug,
+                    complete: DEBUG,
                     stdout: true,
                     stderr: true
                 }
             },
             resources: trajectoryResources,
-            debug
+            debug: DEBUG
         };
 
         const trajectory = new Trajectory(trajectoryOptions);

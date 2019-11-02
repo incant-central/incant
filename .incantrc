@@ -1,1 +1,3 @@
 source[+]: ./examples/**
+input:
+  foo: bar
