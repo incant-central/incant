@@ -45,7 +45,7 @@ async function Incant(options = {}) {
         if (DEBUG) process.env[constants.DEBUG] = DEBUG;
         if (DRY_RUN) process.env[constants.DRY_RUN] = DRY_RUN;
 
-        debug('config:', config);
+        debug('CONFIG', config);
         if (config._.length === 0) {
             process.stdout.write(`nothing to do...${EOL}`);
             return;
@@ -59,7 +59,7 @@ async function Incant(options = {}) {
         const targets = { ...givenTargets, ...loadedTargets }
         const machine = await sota.readAll(config._, { resolver: SubmachineResolver(targets) });
 
-        debug('state machine definition:', machine);
+        debug('STATE MACHINE DEFINITION', machine);
         if (DRY_RUN) process.exit(0);
 
         /**
@@ -79,12 +79,12 @@ async function Incant(options = {}) {
                 compact: COMPACT,
                 gutterWidth: 12,
                 printEvents: {
-                    succeed: false,
+                    succeed: true,
                     start: DEBUG,
                     info: VERBOSE,
                     fail: true,
                     error: true,
-                    final: true,
+                    final: DEBUG,
                     complete: DEBUG,
                     stdout: true,
                     stderr: true
