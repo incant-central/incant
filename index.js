@@ -6,7 +6,7 @@ const { Trajectory } = require('trajectory');
 const DefaultAnswers = require('answers');
 const callsites = require('callsites');
 const constants = require('./lib/constants');
-const { debug } = require('./lib/debug');
+const { debug, dry_run } = require('./lib/debug');
 const { load, sourceExpander } = require('./lib/load');
 const { optionsSchema, configSchema } = require('./lib/schema');
 const { prefixOptions } = require('./lib/util');
@@ -61,6 +61,7 @@ async function Incant(options = {}) {
         const machine = await sota.readAll(config._, { resolver: SubmachineResolver(targets) });
 
         debug('STATE MACHINE DEFINITION', machine);
+        dry_run(machine);
         if (DRY_RUN) process.exit(0);
 
         /**
