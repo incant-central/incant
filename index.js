@@ -58,7 +58,7 @@ async function Incant(options = {}) {
         const source = [ ...givenSource, ...config.source.flat(Infinity) ];
         const loadedTargets = await load({ patterns: source, cwd: path.dirname(calledFrom) });
         const targets = { ...givenTargets, ...loadedTargets }
-        const machine = await sota.readAll(config._, { resolver: SubmachineResolver(targets) });
+        const machine = await sota.readAll(config._, { resolver: SubmachineResolver(targets), argv: true });
 
         debug('STATE MACHINE DEFINITION', machine);
         dry_run(machine);
