@@ -7,8 +7,10 @@ const path = require('path');
 const callsites = require('callsites');
 const { resolveTarget, jitInstall } = require('../lib/resolve');
 const { inspect } = require('util');
+const chalk = require('chalk');
 
 (async () => {
+    try {
     const calledFrom = callsites()[1].getFileName();
     const rawConfig = await Answers({
         name: 'incant',
@@ -20,19 +22,26 @@ const { inspect } = require('util');
     const targets = await load({ patterns: source, cwd: path.dirname(calledFrom) });
     const targetName = config._[0];
     const target = resolveTarget(targets, targetName);
-    if (target == null) throw new Error('no');
+    console.log('target', target);
+    if (target == null) throw new Error(`Unable to resolve \`${targetName}\``);
+    if (target.kind == null) throw new Error(`\`${targetName}\` does not support introspection. Only declarative targets are supported.`);
+    const { kind } = target;
     let loader;
     try {
-        const scoped = `@incant/${target.kind}-loader`;
+        const scoped = `@incant/${kind}-loader`;
         loader = jitInstall(scoped);
     } catch (e) {
         throw new Error(`${kind} is not a valid loader  - ${e.message}`);
     }
+    if (typeof loader.study !== 'function') throw new Error(`The \`${kind}\` loader does not support introspection.`);
     const targetNameParts = targetName.split('.');
     const subcommand = targetNameParts.length > 1
         ? targetNameParts.slice(-1).join('.')
         : null;
     const configPaths = loader.study(target, { subcommand });
     console.log(inspect(configPaths, { depth: null, colors: true }));
-
+    } catch (e) {
+        console.error(chalk.red(e.message));
+        process.exit(1);
+    }
 })();
