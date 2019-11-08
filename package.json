@@ -6,7 +6,7 @@
   "bin": {
     "incant": "./bin/incant",
     "i": "./bin/incant",
-    "istudy": "./bin/study"
+    "study": "./bin/study"
   },
   "scripts": {
     "test": "ava test/*.spec.js",
