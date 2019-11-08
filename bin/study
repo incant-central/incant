@@ -2,11 +2,10 @@
 
 const Answers = require('Answers');
 const { load, sourceExpander } = require('../lib/load');
-const { stateSchema } = require('../lib/schema');
+const { configSchema } = require('../lib/schema');
 const path = require('path');
 const callsites = require('callsites');
-const { resolveTarget } = require('../lib/resolve');
-const ShellSpec = require('shellspec');
+const { resolveTarget, jitInstall } = require('../lib/resolve');
 const { inspect } = require('util');
 
 (async () => {
@@ -16,17 +15,24 @@ const { inspect } = require('util');
         argv: process.argv.slice(2),
         loaders: [ sourceExpander ]
     });
-    const config = await stateSchema.validate(rawConfig);
+    const config = await configSchema.validate(rawConfig);
     const { source } = config;
     const targets = await load({ patterns: source, cwd: path.dirname(calledFrom) });
     const targetName = config._[0];
     const target = resolveTarget(targets, targetName);
-    if (target.kind !== 'shell') throw new Error('no');
+    if (target == null) throw new Error('no');
+    let loader;
+    try {
+        const scoped = `@incant/${target.kind}-loader`;
+        loader = jitInstall(scoped);
+    } catch (e) {
+        throw new Error(`${kind} is not a valid loader  - ${e.message}`);
+    }
     const targetNameParts = targetName.split('.');
     const subcommand = targetNameParts.length > 1
         ? targetNameParts.slice(-1).join('.')
         : null;
-    const configPaths = ShellSpec(target).getConfigPaths(subcommand);
+    const configPaths = loader.study(target, { subcommand });
     console.log(inspect(configPaths, { depth: null, colors: true }));
 
 })();
