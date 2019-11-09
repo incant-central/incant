@@ -28,15 +28,16 @@
     "callsites": "3.1.0",
     "chalk": "^2.4.2",
     "edn-to-js": "0.0.4",
+    "execa": "^3.2.0",
     "globby": "10.0.1",
-    "inquirer": "6.5.1",
+    "inquirer": "^6.5.1",
     "js-yaml": "3.13.1",
     "pdn": "0.3.18",
     "requireg": "^0.2.2",
     "resolve-global": "^1.0.0",
     "sota": "0.2.26",
     "sugarmerge": "0.2.5",
-    "trajectory": "0.4.3"
+    "trajectory": "0.4.4"
   },
   "devDependencies": {
     "ava": "2.2.0",

@@ -5,7 +5,8 @@ const { load, sourceExpander } = require('../lib/load');
 const { configSchema } = require('../lib/schema');
 const path = require('path');
 const callsites = require('callsites');
-const { resolveTarget, jitInstall } = require('../lib/resolve');
+const { resolveTarget } = require('../lib/resolve');
+const { jitInstall } = require('../lib/install');
 const { inspect } = require('util');
 const chalk = require('chalk');
 
@@ -21,15 +22,14 @@ const chalk = require('chalk');
     const { source } = config;
     const targets = await load({ patterns: source, cwd: path.dirname(calledFrom) });
     const targetName = config._[0];
-    const target = resolveTarget(targets, targetName);
-    console.log('target', target);
+    const target = await resolveTarget(targets, targetName);
     if (target == null) throw new Error(`Unable to resolve \`${targetName}\``);
     if (target.kind == null) throw new Error(`\`${targetName}\` does not support introspection. Only declarative targets are supported.`);
     const { kind } = target;
     let loader;
     try {
         const scoped = `@incant/${kind}-loader`;
-        loader = jitInstall(scoped);
+        loader = await jitInstall(scoped);
     } catch (e) {
         throw new Error(`${kind} is not a valid loader  - ${e.message}`);
     }

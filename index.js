@@ -67,11 +67,13 @@ async function Incant(options = {}) {
         /**
          * Trajectory - execute state machine
          */
-        const trajectoryResourceCache = new WeakMap();
+        const resourceCache = new WeakMap();
 
         const trajectoryResources = new Proxy({}, {
             get(_, name) {
-                return trajectoryResourceCache[name] || loadResource(name, resolveTarget(targets, name), loaders);
+                const cached = resourceCache[name];
+                if (cached) return cached;
+                return resourceCache[name] = loadResource(targets, name, loaders);
             }
         });
 
