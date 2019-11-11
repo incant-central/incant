@@ -6,7 +6,7 @@ const { Trajectory } = require('trajectory');
 const DefaultAnswers = require('answers');
 const callsites = require('callsites');
 const constants = require('./lib/constants');
-const { debug, dry_run } = require('./lib/debug');
+const { debug, print_machine } = require('./lib/debug');
 const { load, sourceExpander } = require('./lib/load');
 const { optionsSchema, configSchema } = require('./lib/schema');
 const { prefixOptions } = require('./lib/util');
@@ -39,12 +39,12 @@ async function Incant(options = {}) {
         }));
 
         const DEBUG = process.env[constants.DEBUG] || config['--'].includes('--debug') || (config.settings || {}).debug;
-        const DRY_RUN = process.env[constants.DRY_RUN] || config['--'].includes('--dry-run') || (config.settings || {}).dry_run;
+        const PRINT_MACHINE = process.env[constants.PRINT_MACHINE] || config['--'].includes('--print-machine') || (config.settings || {}).print_machine;
         const VERBOSE = process.env[constants.VERBOSE] || config['--'].includes('-v') || config['--'].includes('--verbose') || (config.settings || {}).verbose;
         const COMPACT = process.env[constants.COMPACT] || config['--'].includes('-c') || config['--'].includes('--compact') || (config.settings || {}).compact;
         const PIPE = process.env[constants.PIPE] || config['--'].includes('-p') || config['--'].includes('--pipe') || (config.settings || {}).pipe;
         if (DEBUG) process.env[constants.DEBUG] = DEBUG;
-        if (DRY_RUN) process.env[constants.DRY_RUN] = DRY_RUN;
+        if (PRINT_MACHINE) process.env[constants.PRINT_MACHINE] = PRINT_MACHINE;
 
         debug('CONFIG', config);
         if (config._.length === 0) {
@@ -61,8 +61,8 @@ async function Incant(options = {}) {
         const machine = await sota.readAll(config._, { resolver: SubmachineResolver(targets), argv: true });
 
         debug('STATE MACHINE DEFINITION', machine);
-        dry_run(machine);
-        if (DRY_RUN) process.exit(0);
+        print_machine(machine);
+        if (PRINT_MACHINE) process.exit(0);
 
         /**
          * Trajectory - execute state machine
