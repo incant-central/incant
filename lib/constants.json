@@ -1,7 +1,7 @@
 {
-    "DEBUG": "INCANT_DEBUG",
-    "DRY_RUN": "INCANT_DRY_RUN",
-    "VERBOSE": "INCANT_VERBOSE",
-    "COMPACT": "INCANT_COMPACT",
-    "PIPE": "INCANT_PIPE"
+    "DEBUG": "incant_debug",
+    "PRINT": "incant_print",
+    "VERBOSE": "incant_verbose",
+    "QUIET": "incant_quiet",
+    "PIPE": "incant_pipe"
 }
