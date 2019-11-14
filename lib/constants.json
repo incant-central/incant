@@ -3,5 +3,6 @@
     "PRINT": "incant_print",
     "VERBOSE": "incant_verbose",
     "QUIET": "incant_quiet",
-    "PIPE": "incant_pipe"
+    "PIPE": "incant_pipe",
+    "INSTALL": "incant_install"
 }
