@@ -112,7 +112,7 @@ async function Incant(options = {}) {
 
         const trajectory = new Trajectory(trajectoryOptions);
 
-        return trajectory.execute(machine, config.input);
+        return trajectory.execute(machine, config.input || []);
 
     } catch (e) {
         handleError(e);
