@@ -11,7 +11,7 @@ const { debug, print } = require('./lib/debug');
 const { load, sourceExpander } = require('./lib/load');
 const { optionsSchema, configSchema } = require('./lib/schema');
 const { prefixOptions, setEnv } = require('./lib/util');
-const { resolveTarget, loadResource, SubmachineResolver } = require('./lib/resolve');
+const { loadResource, SubmachineResolver } = require('./lib/resolve');
 const { handleError } = require('./lib/error');
 const { EOL } = require('os');
 
@@ -22,7 +22,7 @@ async function Incant(options = {}) {
         const {
             name = 'incant',
             argv = process.argv.slice(2),
-            targets:givenTargets = {},
+            tasks:givenTasks = {},
             source:givenSource,
             loaders = {},
             __Answers__:Answers = DefaultAnswers
@@ -68,9 +68,9 @@ async function Incant(options = {}) {
          * Sota - compile state machine definition
          */
         const source = [ ...givenSource, ...config.source.flat(Infinity) ];
-        const loadedTargets = await load({ patterns: source, cwd: path.dirname(calledFrom) });
-        const targets = { ...givenTargets, ...loadedTargets }
-        const machine = await sota.readAll(cliStates, { resolver: SubmachineResolver(targets), argv: true });
+        const loadedTasks = await load({ patterns: source, cwd: path.dirname(calledFrom) });
+        const tasks = { ...givenTasks, ...loadedTasks }
+        const machine = await sota.readAll(cliStates, { resolver: SubmachineResolver(tasks), argv: true });
 
         debug('STATE MACHINE DEFINITION', machine);
         print(machine);
@@ -85,7 +85,7 @@ async function Incant(options = {}) {
             get(_, name) {
                 const cached = resourceCache[name];
                 if (cached) return cached;
-                return resourceCache[name] = loadResource(targets, name, loaders);
+                return resourceCache[name] = loadResource(tasks, name, loaders);
             }
         });
 

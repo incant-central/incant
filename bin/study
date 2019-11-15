@@ -5,41 +5,60 @@ const { load, sourceExpander } = require('../lib/load');
 const { configSchema } = require('../lib/schema');
 const path = require('path');
 const callsites = require('callsites');
-const { resolveTarget } = require('../lib/resolve');
+const { resolveTask } = require('../lib/resolve');
 const { jitInstall } = require('../lib/install');
 const { inspect } = require('util');
 const chalk = require('chalk');
 
+function extractSubtask(taskName) {
+    const nameParts = taskName.split('.');
+    const subtask = nameParts.length > 1
+        ? nameParts.slice(-1).join('.')
+        : null;
+    return subtask;
+}
+
 (async () => {
     try {
-    const calledFrom = callsites()[1].getFileName();
-    const rawConfig = await Answers({
-        name: 'incant',
-        argv: process.argv.slice(2),
-        loaders: [ sourceExpander ]
-    });
-    const config = await configSchema.validate(rawConfig);
-    const { source } = config;
-    const targets = await load({ patterns: source, cwd: path.dirname(calledFrom) });
-    const targetName = config._[0];
-    const target = await resolveTarget(targets, targetName);
-    if (target == null) throw new Error(`Unable to resolve \`${targetName}\``);
-    if (target.kind == null) throw new Error(`\`${targetName}\` does not support introspection. Only declarative targets are supported.`);
-    const { kind } = target;
-    let loader;
-    try {
-        const scoped = `@incant/${kind}-loader`;
-        loader = await jitInstall(scoped);
-    } catch (e) {
-        throw new Error(`${kind} is not a valid loader  - ${e.message}`);
-    }
-    if (typeof loader.study !== 'function') throw new Error(`The \`${kind}\` loader does not support introspection.`);
-    const targetNameParts = targetName.split('.');
-    const subcommand = targetNameParts.length > 1
-        ? targetNameParts.slice(-1).join('.')
-        : null;
-    const configPaths = loader.study(target, { subcommand });
-    console.log(inspect(configPaths, { depth: null, colors: true }));
+        const calledFrom = callsites()[1].getFileName();
+        const rawConfig = await Answers({
+            name: 'incant',
+            argv: process.argv.slice(2),
+            loaders: [ sourceExpander ]
+        });
+        const config = await configSchema.validate(rawConfig);
+        const { source } = config;
+        const tasks = await load({ patterns: source, cwd: path.dirname(calledFrom) });
+        const taskName = config._[0];
+        const task = await resolveTask(tasks, taskName);
+        if (task == null) throw new Error(`Unable to resolve \`${taskName}\``);
+
+        if (task.kind != null) {
+            const { kind } = task;
+            let loader;
+            try {
+                const scoped = `@incant/${kind}-loader`;
+                loader = await jitInstall(scoped);
+            } catch (e) {
+                throw new Error(`${kind} is not a valid loader  - ${e.message}`);
+            }
+            if (typeof loader.study !== 'function') throw new Error(`The \`${kind}\` loader does not support introspection.`);
+            const subtask = extractSubtask(taskName);
+            const output = loader.study(task, { subtask });
+            if (typeof output === 'string') return console.log(output);
+            return console.log(inspect(output, { depth: null, colors: true }));
+        }
+
+        if (typeof task.study === 'string') return console.log(task.study);
+
+        if (typeof task.study === 'function') {
+            const subtask = extractSubtask(taskName);
+            const output = task.study({ subtask });
+            if (typeof output === 'string') return console.log(output);
+            return console.log(inspect(output, { depth: null, colors: true }));
+        }
+
+        throw new Error(`\`${taskName}\` does not support introspection.`);
     } catch (e) {
         console.error(chalk.red(e.message));
         process.exit(1);
