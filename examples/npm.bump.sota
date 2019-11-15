@@ -1,4 +1,5 @@
-npm.version
-git.push
-@^[{push {tags true}} git.push]
-npm.publish
+get-version
+@[$.semver npm.version]
+@[[] git.push]
+@^[--tags git.push]
+@[[--access public] npm.publish]

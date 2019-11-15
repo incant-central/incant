@@ -1,7 +1,0 @@
-kind: shellspec
-spec:
-  main: cowsay
-  args:
-  - name: thoughts
-    type: value
-    default: moo

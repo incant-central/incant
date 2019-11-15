@@ -1,2 +1,0 @@
-@[{log {pretty "format:%h - %s%n"}} git.log]
-@[{thoughts.$ $} cowsay]

@@ -1,0 +1,9 @@
+kind: prompt
+spec:
+  - name: semver
+    type: list
+    choices:
+      - patch
+      - minor
+      - major
+    message: Choose wisely...
