@@ -36,9 +36,9 @@
     "pdn": "0.3.18",
     "requireg": "^0.2.2",
     "resolve-global": "^1.0.0",
-    "sota": "0.2.34",
+    "sota": "0.2.35",
     "sugarmerge": "0.2.5",
-    "trajectory": "0.5.6"
+    "trajectory": "0.5.7"
   },
   "devDependencies": {
     "ava": "2.2.0",
