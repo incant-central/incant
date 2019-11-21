@@ -28,18 +28,13 @@ async function Incant(options = {}) {
             __Answers__:Answers = DefaultAnswers
         } = await optionsSchema.validate(options);
 
-        const cliOptionsIdx = argv.indexOf('--');
-        const hasCliOptions = cliOptionsIdx == -1;
-
-        const cliStates = hasCliOptions
-            ? argv
-            : argv.slice(0, cliOptionsIdx);
-
-        const cliOptions = hasCliOptions
-            ? []
-            : argv.slice(cliOptionsIdx + 1);
-
         process.title = name;
+
+        const cliOptionsIdx = argv.indexOf('--');
+
+        const [ cliStates, cliOptions ] = cliOptionsIdx == -1
+            ? [ argv, [] ]
+            : [ argv.slice(0, cliOptionsIdx), argv.slice(cliOptionsIdx + 1) ];
 
         /**
          * Answers - load argv and config
@@ -59,6 +54,7 @@ async function Incant(options = {}) {
         } = setEnv(config);
 
         debug('CONFIG', config);
+
         if (cliStates.length === 0) {
             process.stdout.write(`nothing to do...${EOL}`);
             return;
@@ -98,12 +94,12 @@ async function Incant(options = {}) {
                     succeed: !PIPE,
                     start: !PIPE && DEBUG,
                     info: !PIPE && VERBOSE,
-                    fail: !PIPE && true,
-                    error: !PIPE && true,
+                    fail: !PIPE,
+                    error: !PIPE,
                     final: PIPE,
                     complete: !PIPE && DEBUG,
-                    stdout: !PIPE && true,
-                    stderr: !PIPE && true
+                    stdout: !PIPE,
+                    stderr: !PIPE
                 }
             },
             resources: trajectoryResources,
