@@ -5,7 +5,7 @@ const { load, sourceExpander } = require('../lib/load');
 const { configSchema } = require('../lib/schema');
 const path = require('path');
 const callsites = require('callsites');
-const { resolveTask } = require('../lib/resolve');
+const { Resolve } = require('../lib/resolve');
 const { jitInstall } = require('../lib/install');
 const { inspect } = require('util');
 const chalk = require('chalk');
@@ -30,7 +30,8 @@ function extractSubtask(taskName) {
         const { source } = config;
         const tasks = await load({ patterns: source, cwd: path.dirname(calledFrom) });
         const taskName = config._[0];
-        const task = await resolveTask(tasks, taskName);
+        const { resolveResource } = Resolve({ tasks });
+        const task = await resolveResource(taskName);
         if (task == null) throw new Error(`Unable to resolve \`${taskName}\``);
 
         if (task.kind != null) {
