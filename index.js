@@ -93,6 +93,15 @@ async function Incant(options = {}) {
                 cols: 0,
                 quiet: PIPE || QUIET,
                 gutterWidth: 12,
+                printStates: {
+                    Parallel: PIPE,
+                    Task: true,
+                    Pass: true,
+                    Choice: true,
+                    Succeed: true,
+                    Fail: true,
+                    Wait: true
+                },
                 printEvents: {
                     succeed: !PIPE,
                     start: !PIPE && DEBUG,
