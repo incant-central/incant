@@ -1,6 +1,6 @@
 {
   "name": "incant",
-  "version": "0.6.8",
+  "version": "0.6.9",
   "description": "magical incantations for the command-line",
   "main": "index.js",
   "bin": {
